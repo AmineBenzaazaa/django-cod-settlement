@@ -131,10 +131,9 @@ class DisputeSerializer(serializers.ModelSerializer):
         self.fields["result"].queryset = qs
 
     def validate_result(self, result: ReconciliationResult):
+        # "Already disputed" is enforced by the OneToOne field's auto UniqueValidator.
         if result.outcome == ReconciliationResult.Outcome.MATCHED:
             raise serializers.ValidationError("Matched results cannot be disputed.")
-        if Dispute.objects.filter(result=result).exists():
-            raise serializers.ValidationError("This result is already disputed.")
         return result
 
     def create(self, validated_data):
