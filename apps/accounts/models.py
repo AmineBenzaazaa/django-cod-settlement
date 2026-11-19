@@ -36,4 +36,3 @@ class User(AbstractUser):
         blank=True,
         related_name="users",
     )
-

@@ -94,3 +94,9 @@ def test_admin_statement_detail_and_reprocess(client, tmp_path, api, courier):
 
     assert RemittanceStatement.objects.get(pk=statement_id).status == "reconciled"
     assert site.is_registered(RemittanceStatement)
+
+
+def test_openapi_schema_generates_without_warnings(tmp_path):
+    call_command(
+        "spectacular", "--validate", "--fail-on-warn", "--file", str(tmp_path / "schema.yml")
+    )

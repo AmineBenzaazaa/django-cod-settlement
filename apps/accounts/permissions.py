@@ -35,12 +35,15 @@ class MerchantScopedQuerysetMixin:
     merchant_lookup = "merchant"
 
     def scope_to_merchant(self, queryset):
+        if getattr(self, "swagger_fake_view", False):  # OpenAPI schema generation
+            return queryset.none()
         user = self.request.user
         if user.is_staff:
             return queryset
-        if not user.merchant_id:
+        merchant_id = getattr(user, "merchant_id", None)
+        if not merchant_id:
             return queryset.none()
-        return queryset.filter(**{f"{self.merchant_lookup}_id": user.merchant_id})
+        return queryset.filter(**{f"{self.merchant_lookup}_id": merchant_id})
 
     def get_queryset(self):
         return self.scope_to_merchant(super().get_queryset())

@@ -127,7 +127,7 @@ class DisputeSerializer(serializers.ModelSerializer):
         request = self.context.get("request")
         qs = ReconciliationResult.objects.select_related("statement")
         if request and not request.user.is_staff:
-            qs = qs.filter(statement__merchant_id=request.user.merchant_id)
+            qs = qs.filter(statement__merchant_id=getattr(request.user, "merchant_id", None))
         self.fields["result"].queryset = qs
 
     def validate_result(self, result: ReconciliationResult):
