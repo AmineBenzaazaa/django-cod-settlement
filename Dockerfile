@@ -19,7 +19,7 @@ RUN uv sync --frozen --no-install-project --no-dev
 COPY . .
 
 RUN useradd --create-home app && mkdir -p /app/media /app/staticfiles \
-    && chown -R app /app/media /app/staticfiles
+    && chown -R app /app/media /app/staticfiles /app/fixtures
 USER app
 
 RUN DJANGO_SECRET_KEY=build-only python manage.py collectstatic --noinput
