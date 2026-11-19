@@ -19,7 +19,7 @@ env = environ.Env(
 )
 environ.Env.read_env(BASE_DIR / ".env")  # optional; missing file is ignored
 
-SECRET_KEY = env("DJANGO_SECRET_KEY", default="insecure-dev-key-change-me")
+SECRET_KEY = env("DJANGO_SECRET_KEY", default="insecure-dev-only-key-change-me-in-production")
 DEBUG = env("DJANGO_DEBUG")
 ALLOWED_HOSTS = env("DJANGO_ALLOWED_HOSTS")
 

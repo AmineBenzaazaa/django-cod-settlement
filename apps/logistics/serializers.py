@@ -47,13 +47,15 @@ class OrderSerializer(serializers.ModelSerializer):
         ]
         # Status changes go through the /attempts action so the lifecycle stays consistent.
         read_only_fields = ["status", "delivered_at", "created_at", "updated_at"]
+        # DRF would auto-generate a UniqueTogetherValidator from the model constraint;
+        # we check it in validate() instead to return a field-level error message.
+        validators = []
 
     def validate_tracking_number(self, value: str) -> str:
         return value.strip().upper()
 
     def validate(self, attrs):
-        # ModelSerializer cannot auto-validate our UniqueConstraint when one field may come
-        # from the existing instance on PATCH, so check it explicitly for a clean 400.
+        # On PATCH one of the two fields may come from the existing instance.
         courier = attrs.get("courier", getattr(self.instance, "courier", None))
         tracking = attrs.get("tracking_number", getattr(self.instance, "tracking_number", None))
         if courier and tracking:

@@ -37,6 +37,3 @@ class User(AbstractUser):
         related_name="users",
     )
 
-    @property
-    def is_merchant_user(self) -> bool:
-        return self.merchant_id is not None and not self.is_staff
